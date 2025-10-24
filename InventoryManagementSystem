@@ -1,0 +1,78 @@
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Comparator;
+import java.util.Map;
+
+public class InventoryManagementSystem {
+    HashMap<Integer, Product> inventory;
+    int nextProductId;
+
+    public InventoryManagementSystem() {
+        inventory = new HashMap<>();
+        nextProductId = 1001;
+    }
+
+    public void addProduct(Product product) {
+        inventory.put(product.getProductId(), product);
+    }
+
+    public boolean removeProduct(int productId) {
+        return inventory.remove(productId) != null;
+    }
+
+    public boolean updateStock(int productId, int quantityChange) {
+        Product product = inventory.get(productId);
+        if (product != null) {
+            product.updateStock(quantityChange);
+            return true;
+        }
+        return false;
+    }
+
+    public Product searchById(int productId) {
+        return inventory.get(productId);
+    }
+
+    public List<Product> searchByName(String name) {
+        List<Product> results = new ArrayList<>();
+        String searchName = name.toLowerCase();
+        for (Product product : inventory.values()) {
+            if (product.getName().toLowerCase().contains(searchName))
+                results.add(product);
+        }
+        return results;
+    }
+
+    public HashMap<String, List<Product>> getProductsByCategory() {
+        HashMap<String, List<Product>> categoryMap = new HashMap<>();
+        for (Product product : inventory.values()) {
+            String category = product.getCategory();
+            if (!categoryMap.containsKey(category))
+                categoryMap.put(category, new ArrayList<>());
+            categoryMap.get(category).add(product);
+        }
+        return categoryMap;
+    }
+
+    public List<Product> getLowStockProducts(int threshold) {
+        List<Product> lowStockProducts = new ArrayList<>();
+        for (Product product : inventory.values()) {
+            if (product.isLowStock(threshold)) {
+                lowStockProducts.add(product);
+            }
+        }
+        lowStockProducts.sort(Comparator.comparingInt(Product::getQuantity));
+        return lowStockProducts;
+    }
+
+    public double calculateTotalValue() {
+        double total = 0;
+        for (Product product : inventory.values())
+            total += product.getTotalValue();
+        return total;
+    }
+
+    public int getTotalProducts() { return inventory.size(); }
+    public int getTotalCategories() { return getProductsByCategory().size(); }
+}
