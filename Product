@@ -1,0 +1,59 @@
+public class Product {
+    private int productId;
+    private String name;
+    private String category;
+    private double price;
+    private int quantity;
+    private String supplier;
+
+    public Product(int productId, String name, String category, double price, int quantity, String supplier) {
+        this.productId = productId;
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.quantity = quantity;
+        this.supplier = supplier;
+    }
+
+    // ----- Getters -----
+    public int getProductId() { return productId; }
+    public String getName() { return name; }
+    public String getCategory() { return category; }
+    public double getPrice() { return price; }
+    public int getQuantity() { return quantity; }
+    public String getSupplier() { return supplier; }
+
+    // ----- Setters -----
+    public void setProductId(int productId) { this.productId = productId; }
+    public void setName(String name) { this.name = name; }
+    public void setCategory(String category) { this.category = category; }
+    public void setPrice(double price) { this.price = price; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }  // ✅ required setter
+    public void setSupplier(String supplier) { this.supplier = supplier; }
+
+    // ----- Other Methods -----
+    public void updateStock(int change) {
+        this.quantity += change;
+        if (this.quantity < 0) this.quantity = 0;
+    }
+
+    public double getTotalValue() {
+        return price * quantity;
+    }
+
+    public boolean isLowStock(int threshold) {
+        return quantity <= threshold;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d | Name: %-20s | Category: %-15s | Price: $%.2f | Quantity: %d | Supplier: %s",
+                productId, name, category, price, quantity, supplier);
+    }
+
+    public String getDetailedInfo() {
+        return String.format(
+            "Product ID: %d\nName: %s\nCategory: %s\nPrice: $%.2f\nQuantity: %d\nSupplier: %s\nTotal Value: $%.2f\n-------------------",
+            productId, name, category, price, quantity, supplier, getTotalValue());
+    }
+}
